@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Filament\Resources\Countries\Schemas;
+
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Schema;
+
+class CountryForm
+{
+    public static function configure(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                TextInput::make('iso2')
+                    ->required(),
+                TextInput::make('name')
+                    ->required(),
+                TextInput::make('status')
+                    ->required()
+                    ->numeric()
+                    ->default(1),
+                TextInput::make('phone_code')
+                    ->tel()
+                    ->required(),
+                TextInput::make('iso3')
+                    ->required(),
+                TextInput::make('region')
+                    ->required(),
+                TextInput::make('subregion')
+                    ->required(),
+            ]);
+    }
+}
