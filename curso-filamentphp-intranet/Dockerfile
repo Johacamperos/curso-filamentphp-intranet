@@ -34,4 +34,4 @@ RUN sed -i 's/\r$//' /opt/docker/provision/entrypoint.d/99-laravel.sh \
 # Volver al usuario no-root
 USER application
 
-EXPOSE 80
+EXPOSE 8080
