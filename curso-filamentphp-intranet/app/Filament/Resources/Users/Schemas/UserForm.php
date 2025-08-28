@@ -40,7 +40,7 @@ class UserForm
                         ->relationship('country', 'name') 
                         ->searchable()
                         ->preload()
-                        ->required(),                     
+                        ->nullable(),                     
                 ])
                 ->columns(1)
                 ->columnSpanFull(),

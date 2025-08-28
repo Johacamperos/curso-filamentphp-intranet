@@ -21,12 +21,12 @@ return new class extends Migration
     //     });
     // }
 
-  public function up(): void
+ public function up(): void
 {
     Schema::table('users', function (Blueprint $table) {
-        $table->dropForeign(['country_id']);
-        $table->dropForeign(['state_id']);
-        $table->dropForeign(['city_id']);
+        $table->foreignId('country_id')->nullable()->after('password');
+        $table->foreignId('state_id')->nullable()->after('country_id');
+        $table->foreignId('city_id')->nullable()->after('state_id');
     });
 
     Schema::table('users', function (Blueprint $table) {

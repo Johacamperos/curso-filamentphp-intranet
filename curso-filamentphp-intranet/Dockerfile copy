@@ -1,0 +1,30 @@
+FROM webdevops/php-nginx:8.3-alpine
+
+ENV WEB_DOCUMENT_ROOT=/app/public
+
+# Paquetes -dev para compilar extensiones
+RUN apk add --no-cache \
+    git unzip pkgconfig \
+    icu-dev \
+    sqlite sqlite-dev \
+    libpng-dev libjpeg-turbo-dev libwebp-dev freetype-dev \
+    zlib-dev libzip-dev \
+    $PHPIZE_DEPS
+
+# Extensiones PHP
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+ && docker-php-ext-install -j$(nproc) \
+    pdo_sqlite bcmath intl gd zip pcntl opcache
+
+# Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /app
+COPY composer.json composer.lock* ./
+RUN composer install --no-interaction --prefer-dist --no-scripts --no-progress || true
+
+COPY . .
+RUN chown -R application:application storage bootstrap/cache database \
+ && chmod -R ug+rwx storage bootstrap/cache database
+
+EXPOSE 8080

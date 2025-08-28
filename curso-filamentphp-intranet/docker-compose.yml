@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: filament-app
+    # Mapea 8080 del host -> 80 del contenedor (webdevops nginx escucha en 80)
+    ports:
+      - "8080:80"
+    # Para desarrollo: bind mount del código
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    # Si quieres logs en tu consola:
+    # environment:
+    #   - WEB_DOCUMENT_ROOT=/app/public
+    #   - LOG_STDOUT=true
+    #   - LOG_STDERR=true
