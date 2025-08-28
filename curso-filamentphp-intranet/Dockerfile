@@ -2,12 +2,15 @@ FROM webdevops/php-nginx:8.3-alpine
 
 ENV WEB_DOCUMENT_ROOT=/app/public
 
-# Paquetes y headers para compilar extensiones
+
+USER root
+
 RUN apk add --no-cache \
     git unzip sqlite sqlite-dev \
     icu-dev \
     libpng-dev libjpeg-turbo-dev libwebp-dev freetype-dev \
-    zlib-dev libzip-dev autoconf g++ make
+    zlib-dev libzip-dev \
+    $PHPIZE_DEPS  # viene definido en las imágenes oficiales y trae autoconf, make, gcc, etc.
 
 # Extensiones PHP
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
@@ -34,5 +37,8 @@ RUN mkdir -p storage/logs storage/framework/{cache,sessions,views} database \
 COPY docker/entrypoint/99-laravel.sh /opt/docker/provision/entrypoint.d/99-laravel.sh
 RUN sed -i 's/\r$//' /opt/docker/provision/entrypoint.d/99-laravel.sh \
  && chmod +x /opt/docker/provision/entrypoint.d/99-laravel.sh
+
+# <--- volver al usuario por defecto de la imagen
+USER application
 
 EXPOSE 80
